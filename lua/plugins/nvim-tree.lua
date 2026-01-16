@@ -12,8 +12,6 @@ return {
     update_focused_file = { 
       enable = true, 
     },
-    is_invisible_cursor = true,
-    
     renderer = { group_empty = true },
     filters = { dotfiles = false, git_ignored = false },
   },
