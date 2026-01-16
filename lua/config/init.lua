@@ -17,8 +17,9 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- 残りの設定ファイルの読み込み
+require("config.keymaps") -- キーマップ設定
+
 require("lazy").setup({
-  { import = "config.keymaps" },  -- キーマップ設定
   -- { import = "config.indent" },    -- インデント設定
   { import = "plugins" },
   -- { import = "snippets.cpp" },  -- C++スニペット
