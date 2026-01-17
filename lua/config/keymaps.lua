@@ -6,8 +6,8 @@ local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
 -- 分割（標準コマンドにエイリアス）
-map("n", "<leader>sv", "<cmd>vsplit<cr>", vim.tbl_extend("force", opts, { desc = "Vertical split" }))
-map("n", "<leader>sh", "<cmd>split<cr>",  vim.tbl_extend("force", opts, { desc = "Horizontal split" }))
+map("n", "<leader>L", "<cmd>vsplit<cr>", vim.tbl_extend("force", opts, { desc = "Vertical split" }))
+map("n", "<leader>J", "<cmd>split<cr>",  vim.tbl_extend("force", opts, { desc = "Horizontal split" }))
 
 -- ウィンドウ移動（Ctrl-w を省略）
 map("n", "<leader>h", "<C-w>h", vim.tbl_extend("force", opts, { desc = "Go left window" }))
