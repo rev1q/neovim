@@ -1,47 +1,50 @@
 return {
-  'akinsho/toggleterm.nvim',
+  "akinsho/toggleterm.nvim",
   version = "*",
-  config = function()
-    require("toggleterm").setup{
-      size = 20,                     -- size can be a number or function which is passed the current terminal
-      open_mapping = [[<leader>th]], -- or { [[<c-\>]], [[<c-¥>]] } if you also use a Japanese keyboard.
-      hide_numbers = true,           -- hide the number column in toggleterm buffers
-      shade_filetypes = {},
-      autochdir = false,             -- when neovim changes it current directory the terminal will change it's own when next it's opened
-      shade_terminals = true,        -- NOTE: this option takes priority over highlights specified so if you specify Normal highlights you should set this to false
-      start_in_insert = true,
-      insert_mappings = true,        -- whether or not the open mapping applies in insert mode
-      terminal_mappings = true,      -- whether or not the open mapping applies in the opened terminals
-      persist_size = true,
-      persist_mode = true,           -- if set to true (default) the previous terminal mode will be remembered
-      direction = 'horizontal',
-      close_on_exit = true,          -- close the terminal window when the process exits
-      clear_env = false,             -- use only environmental variables from `env`, passed to jobstart()
-       -- Change the default shell. Can be a string or a function returning a string
-      shell = vim.o.shell,
-      auto_scroll = true,            -- automatically scroll to the bottom on terminal output
-      -- This field is only relevant if direction is set to 'float'
-      float_opts = {
-        border = 'curved',
-        winblend = 3,
-        title_pos = 'center',
-      },
-      winbar = {
-        enabled = false,
-        name_formatter = function(term) --  term: Terminal
-          return term.name
-        end
-      },
-    }
-    -- ここでlazygitを開く設定を追加している
-    local Terminal  = require('toggleterm.terminal').Terminal
-    local lazygit = Terminal:new({ cmd = "lazygit", hidden = true, direction = "float" })
-    local float_term = Terminal:new({ hidden = true, direction = "float" })
-    local vertical_term = Terminal:new({ hidden = true, direction = "vertical", size = 80 })
 
-    vim.keymap.set("n", "<leader>lg", function() lazygit:toggle() end, { desc = "ToggleTerm lazygit" })
-    vim.keymap.set("n", "<leader>tf", function() float_term:toggle() end, { desc = "ToggleTerm float" })
-    vim.keymap.set("n", "<leader>tv", function() vertical_term:toggle() end, { desc = "ToggleTerm vertical" })
+  opts = {
+    -- サイズ指定（水平分割の場合の高さ、垂直分割の場合の幅）
+    size = 20,
+    -- ターミナルを開くためのキー（ここでは <C-\> つまり Ctrl + \ ）
+    open_mapping = [[<c-\>]],
+    hide_numbers = true,
+    shade_terminals = true,
+    start_in_insert = true,
+    insert_mappings = true,
+    terminal_mappings = true,
+    persist_size = true,
+    direction = "float", -- 'vertical' | 'horizontal' | 'tab' | 'float'
+    close_on_exit = true,
+    shell = vim.o.shell,
+    -- 浮き出しウィンドウの設定
+    float_opts = {
+      border = "curved", -- 'single' | 'double' | 'shadow' | 'curved'
+      winblend = 3,
+    },
+  },
 
-  end
+  config = function(_, opts)
+    require("toggleterm").setup(opts)
+
+    -- ターミナル内専用のキーマップ設定
+    function _G.set_terminal_keymaps()
+      local map_opts = { buffer = 0 }
+      -- Esc 2回押しでターミナル内のノーマルモードへ（戻りやすくするため）
+      vim.keymap.set("t", "<esc><esc>", [[<C-\><C-n>]], map_opts)
+      -- ターミナル間やウィンドウ間の移動を楽にする設定
+      vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], map_opts)
+      -- vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], map_opts)
+      -- vim.keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]], map_opts)
+      vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]], map_opts)
+    end
+
+    -- ターミナルが開かれた時だけ上記のキーマップを有効にする
+    vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
+
+    -- カスタムキーマップ（お好みで追加してください）
+    -- <leader>f で浮き出しターミナルをトグル
+    vim.keymap.set("n", "<leader>f", "<cmd>ToggleTerm direction=float<cr>", { desc = "浮き出しターミナル" })
+    -- <leader>h で水平分割ターミナルをトグル
+    vim.keymap.set("n", "<leader>th", "<cmd>ToggleTerm size=10 direction=horizontal<cr>", { desc = "ターミナル（水平分割）" })
+  end,
 }
