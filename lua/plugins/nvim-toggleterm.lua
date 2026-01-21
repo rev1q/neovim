@@ -4,7 +4,7 @@ return {
   config = function()
     require("toggleterm").setup{
       size = 20,                     -- size can be a number or function which is passed the current terminal
-      open_mapping = [[<leader>tt]], -- or { [[<c-\>]], [[<c-¥>]] } if you also use a Japanese keyboard.
+      open_mapping = [[<leader>th]], -- or { [[<c-\>]], [[<c-¥>]] } if you also use a Japanese keyboard.
       hide_numbers = true,           -- hide the number column in toggleterm buffers
       shade_filetypes = {},
       autochdir = false,             -- when neovim changes it current directory the terminal will change it's own when next it's opened
@@ -38,16 +38,10 @@ return {
     local lazygit = Terminal:new({ cmd = "lazygit", hidden = true, direction = "float" })
     local float_term = Terminal:new({ hidden = true, direction = "float" })
     local vertical_term = Terminal:new({ hidden = true, direction = "vertical", size = 80 })
-    local horizontal_term = Terminal:new({ hidden = true, direction = "horizontal", size = 20 })
 
-    function _lazygit_toggle()
-      lazygit:toggle()
-    end
-
-    vim.keymap.set("n", "<leader>lg", function() _lazygit_toggle() end, { desc = "ToggleTerm lazygit" })
+    vim.keymap.set("n", "<leader>lg", function() lazygit:toggle() end, { desc = "ToggleTerm lazygit" })
     vim.keymap.set("n", "<leader>tf", function() float_term:toggle() end, { desc = "ToggleTerm float" })
     vim.keymap.set("n", "<leader>tv", function() vertical_term:toggle() end, { desc = "ToggleTerm vertical" })
-    vim.keymap.set("n", "<leader>th", function() horizontal_term:toggle() end, { desc = "ToggleTerm horizontal" })
 
   end
 }
